@@ -95,19 +95,56 @@ import expyriment
 from expyriment import design, control, stimuli
 
 
-exp = expyriment.design.Experiment(name="S_R_T") expyriment.control.initialize(exp)
+exp = expyriment.design.Experiment(name="S_R_T") 
+expyriment.control.initialize(exp)
+exp.data_variable_names = ["Block", "Trial", "Key", "RT"]
 
-expyriment.control.start(exp)
+block_one = expyriment.design.Block(name="A name for the first block")
+trial_one = expyriment.design.Trial()
+stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(10, 10)) 
+stim.preload()
+trial_one.add_stimulus(stim)
+trial_two = expyriment.design.Trial()
+stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(100, 100)) 
+stim.preload()
+trial_two.add_stimulus(stim)
+block_one.add_trial(trial_one)
+block_one.add_trial(trial_two)
+exp.add_block(block_one)
+
+
+
+block_two = expyriment.design.Block(name="A name for the second block")
+trial_one = expyriment.design.Trial()
+stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(-10, -10)) 
+stim.preload()
+trial_one.add_stimulus(stim)
+trial_two = expyriment.design.Trial()
+stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(-100, -100)) 
+stim.preload()
+trial_two.add_stimulus(stim)
+block_two.add_trial(trial_one)
+block_two.add_trial(trial_two)
+exp.add_block(block_two)
+
+
+expyriment.control.start()
+
+for block in exp.blocks:
+    for trial in block.trials:
+        trial.stimuli[0].present()
+        key, rt = exp.keyboard.wait([expyriment.misc.constants.K_LEFT,
+                                     expyriment.misc.constants.K_RIGHT])
+        exp.data.add([block.name, trial.id, key, rt])
+
 
 expyriment.control.end()
 
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), line_width=None, corner_rounding=None, corner_anti_aliasing=None, position=None) stim.preload()
 
-stim.present()
 
-expyriment.control.start(exp)
 
-expyriment.control.end()
+
+
 
 
 
