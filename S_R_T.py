@@ -16,6 +16,9 @@ SIMPLE REACTION TIMES OF IPSILATERAL AND CONTRALATERAL HAND TO LATERALIZED VISUA
 # Delays: 
 #Ancipatory (anything less than is discarded): 5° = 180ms / 20° = 190ms / 35° = 200ms
 #Limits of delay (anything more than is discarded): 5° = 320ms / 20° = 350ms / 35° = 380ms
+# On garde les delais de 35°? 
+# Temps entre les essais: variation entre 1 et 2 sc
+
 
 # To be determined by Part: On which side the stimulus will appear first, which hand is used first (both randomized)
 # To be determined by Block: Side, Angle, Delays (anticipatory and limit), 
@@ -46,94 +49,81 @@ SIMPLE REACTION TIMES OF IPSILATERAL AND CONTRALATERAL HAND TO LATERALIZED VISUA
 import expyriment
 from expyriment import design, control, stimuli
 
-
 exp = expyriment.design.Experiment(name="S_R_T") 
 expyriment.control.initialize(exp)
+
+instructions_RH = expyriment.stimuli.TextLine(text="Lorsque vous voyez le carré apparaître, répondez AVEC VOTRE MAIN DROITE en appuyant sur la touche M. Appuyez sur n'importe quelle touche quand vous êtes prêt.e à commencer.")
+instructions_LH = expyriment.stimuli.TextLine(text="Lorsque vous voyez le carré apparaître, répondez AVEC VOTRE MAIN GAUCHE en appuyant sur la touche Q. Appuyez sur n'importe quelle touche quand vous êtes prêt.e à commencer.")
+
+stim_left = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(10, 10)) # Position left à determiner 
+stim_right = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(100, 100)) # Position right à determiner 
+
+#expyriment.control.start() # Not sure where to put this exactly
+
+
 exp.data_variable_names = ["Block", "Trial", "Key", "RT"]
-# Rajouter side of the stimulus aux variables
-# Randomiser ordre passage Block 1 et Block 2
+# Randomiser ordre passage Block 1 et Block 2 en fonction numéro pair ou impair participant
 
-block_one = expyriment.design.Block(name="Block 1: Right Hand")
-# Ajouter texte qui spécifie qu'il faut utiliser main droite + Changer la key de réponse
-stim = expyriment.stimuli.TextLine(text="Lorsque vous voyez le carré apparaître, répondez AVEC VOTRE MAIN DROITE en appuyant sur la touche M.")
-stim.preload()
+# Block main droite:
+block_RH = expyriment.design.Block(name="Block Right Hand")
+# Changer la key de réponse
+instructions_RH.present()
+exp.keyboard.wait()
+## Apparition random trial one ou trial two
+trial_left = expyriment.design.Trial()
+stim_left.preload()
+trial_left.add_stimulus(stim_left)
 
-expyriment.control.start()
 
-stim.present()
-exp.clock.wait(5000)
+trial_right = expyriment.design.Trial()
+stim_right.preload()
+trial_right.add_stimulus(stim_right)
 
-# Trial one can be left, and Trial two Right 
+block_RH.add_trial(trial_right)
+block_RH.add_trial(trial_left)
+exp.add_block(block_RH)
+
+# Block main gauche:
+block_LH = expyriment.design.Block(name="Block Left Hand")
+# Changer la key de réponse
+instructions_LH.present()
+exp.keyboard.wait()
 # Apparition random trial one ou trial two
-trial_one = expyriment.design.Trial()
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(10, 10)) 
-stim.preload()
-trial_one.add_stimulus(stim)
+trial_left = expyriment.design.Trial()
+stim_left.preload()
+trial_left.add_stimulus(stim_left)
 
-trial_two = expyriment.design.Trial()
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(100, 100)) 
-stim.preload()
-trial_two.add_stimulus(stim)
+trial_right = expyriment.design.Trial()
+stim_right.preload()
+trial_right.add_stimulus(stim_right)
 
-block_one.add_trial(trial_one)
-block_one.add_trial(trial_two)
-exp.add_block(block_one)
+block_LH.add_trial(trial_right)
+block_LH.add_trial(trial_left)
+exp.add_block(block_RH)
 
-
-
-block_two = expyriment.design.Block(name="Block 2: Left Hand")
-# Ajouter texte qui spécifie qu'il faut utiliser main gauche + Changer la key de réponse
-expyriment.stimuli.TextLine(text="Lorsque vous voyez le carré apparaître, répondez AVEC VOTRE MAIN GAUCHE en appuyant sur la touche Q.")
-stim.preload()
-
-expyriment.control.start()
-
-stim.present()
-exp.clock.wait(5000)
-
-# Trial one can be left, and Trial two Right 
-# Apparition random trial one ou trial two
-
-trial_one = expyriment.design.Trial()
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(10, 10)) 
-stim.preload()
-trial_one.add_stimulus(stim)
-
-trial_two = expyriment.design.Trial()
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(100, 100)) 
-stim.preload()
-trial_two.add_stimulus(stim)
-
-
-block_two.add_trial(trial_one)
-block_two.add_trial(trial_two)
-exp.add_block(block_two)
-
-
-expyriment.control.start()
 
 for block in exp.blocks:
     for trial in block.trials:
         trial.stimuli[0].present()
-        key, rt = exp.keyboard.wait([expyriment.misc.constants.K_LEFT,
-                                     expyriment.misc.constants.K_RIGHT])
+        key, rt = exp.keyboard.wait([expyriment.misc.constants.K_q,
+                                     expyriment.misc.constants.K_m])
         exp.data.add([block.name, trial.id, key, rt])
 
 
 expyriment.control.end()
 
+#Block left + instructions left
+#Block right + instructions right
+
+# if numero du sujet pair, afficher instructions droite, et block 1 ; if numero sujet impair, afficher instruction gauche 
+
+# Block 1: boucle 30 essais droit, boucle 30 essais gauche
+# Block 2: boucle 30 essais droit, boucle 30 essais gauche
 
 
-# Utiliser block de expyriment et add trials
 
 
-
-
-
-# Faire plusieurs (10) trials avec TR enregistrés; définir un certain temps pendant lequel j'attends une réponse du sujet, et au delà duquel la réponse du sujet n'est pas enregistrée
-
-
-# S'affichent à droit et à gauche 
+# Définir un certain temps pendant lequel j'attends une réponse du sujet, et au delà duquel la réponse du sujet n'est pas enregistrée
 
 
 # Réponse congruente et incongruente
