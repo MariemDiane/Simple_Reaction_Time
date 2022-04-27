@@ -8,24 +8,15 @@ SIMPLE REACTION TIMES OF IPSILATERAL AND CONTRALATERAL HAND TO LATERALIZED VISUA
 
 # TARGET STIMULUS = Square, presented for 32ms
 
-# 3 sessions
-# Within each session, 3 parts; 1 angle per part 
-# Randomisation: "Whether the stimulus would appear in the right or left field and whether the right or left hand would be used first, was decided on a random basis for each part of the session.""
+# Facteurs: Side of target (Nasal or Temporal), (Angle from fixation cross (5°, 20°, 35°)), Hand used (Left or Right)
 
-# Within each part, 2 subparts (One where stimulus appears on one side, and the other where the stimulus appears on the other side; same visual angle)
-# Within each subpart, 4 blocks: 1st and 4th with one hand, 2cnd and 3rd with the other hand
-# Within each block, 15 trials
-
-# Facteurs: Side of target (Nasal or Temporal), Angle from fixation cross (5°, 20°, 35°), Hand used (Left or Right)
-
-# Utiliser block de expyriment et add trials
 
 # Total number of trials for each sesson = 360, 60 trials with each of the six retinal points tested; Half of these trials were with the right hand, half with the left hand.
-
 
 # Delays: 
 #Ancipatory (anything less than is discarded): 5° = 180ms / 20° = 190ms / 35° = 200ms
 #Limits of delay (anything more than is discarded): 5° = 320ms / 20° = 350ms / 35° = 380ms
+
 # To be determined by Part: On which side the stimulus will appear first, which hand is used first (both randomized)
 # To be determined by Block: Side, Angle, Delays (anticipatory and limit), 
 
@@ -40,13 +31,6 @@ SIMPLE REACTION TIMES OF IPSILATERAL AND CONTRALATERAL HAND TO LATERALIZED VISUA
 
 """""""""""""""""""""""----------------------"""""""""""""""""""""""
 
-
-# I. Afficher carré
-
-#Version pygame
-
-# import pygame
-
 # # Colors are triplets containint RGB values
 # # (see <https://www.rapidtables.com/web/color/RGB_Color.html>
 # BLACK = (0, 0, 0)
@@ -55,38 +39,6 @@ SIMPLE REACTION TIMES OF IPSILATERAL AND CONTRALATERAL HAND TO LATERALIZED VISUA
 # RED = (255, 0, 0)
 # GREEN = (0, 255, 0)
 # BLUE = (0, 0, 255)
-
-# #  create the window
-# W, H = 1000, 1000  # Size of the graphic window
-# # Note that (0,0) is at the *upper* left hand corner of the screen.
-# center_x = W // 2
-# center_y = H // 2
-
-# pygame.init()
-# screen = pygame.display.set_mode((W, H), pygame.DOUBLEBUF)
-# pygame.display.set_caption('square')
-
-# screen.fill(GRAY)  # fill it with white
-
-# # # Draw a rectangle at the center of the screen (in the backbuffer)
-# width, height = 100, 100  # dimensions of the rectangle in pixels
-# left_x = center_x - width // 2  # x coordinate of topleft corner
-# top_y = center_y - height // 2  # y coordinate of topleft corner
-
-# pygame.draw.rect(screen, WHITE, (left_x, top_y, width, height))
-
-# pygame.display.flip()  # display the backbuffer on the screen
-
-
-# # Wait until the window is closed
-# quit_button_pressed = False
-# while not quit_button_pressed:
-#     pygame.time.wait(10)
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             quit_button_pressed = True
-
-# pygame.quit()
 
 
 # Version expyriment 
@@ -98,31 +50,61 @@ from expyriment import design, control, stimuli
 exp = expyriment.design.Experiment(name="S_R_T") 
 expyriment.control.initialize(exp)
 exp.data_variable_names = ["Block", "Trial", "Key", "RT"]
+# Rajouter side of the stimulus aux variables
+# Randomiser ordre passage Block 1 et Block 2
 
-block_one = expyriment.design.Block(name="A name for the first block")
+block_one = expyriment.design.Block(name="Block 1: Right Hand")
+# Ajouter texte qui spécifie qu'il faut utiliser main droite + Changer la key de réponse
+stim = expyriment.stimuli.TextLine(text="Lorsque vous voyez le carré apparaître, répondez AVEC VOTRE MAIN DROITE en appuyant sur la touche M.")
+stim.preload()
+
+expyriment.control.start()
+
+stim.present()
+exp.clock.wait(5000)
+
+# Trial one can be left, and Trial two Right 
+# Apparition random trial one ou trial two
 trial_one = expyriment.design.Trial()
 stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(10, 10)) 
 stim.preload()
 trial_one.add_stimulus(stim)
+
 trial_two = expyriment.design.Trial()
 stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(100, 100)) 
 stim.preload()
 trial_two.add_stimulus(stim)
+
 block_one.add_trial(trial_one)
 block_one.add_trial(trial_two)
 exp.add_block(block_one)
 
 
 
-block_two = expyriment.design.Block(name="A name for the second block")
+block_two = expyriment.design.Block(name="Block 2: Left Hand")
+# Ajouter texte qui spécifie qu'il faut utiliser main gauche + Changer la key de réponse
+expyriment.stimuli.TextLine(text="Lorsque vous voyez le carré apparaître, répondez AVEC VOTRE MAIN GAUCHE en appuyant sur la touche Q.")
+stim.preload()
+
+expyriment.control.start()
+
+stim.present()
+exp.clock.wait(5000)
+
+# Trial one can be left, and Trial two Right 
+# Apparition random trial one ou trial two
+
 trial_one = expyriment.design.Trial()
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(-10, -10)) 
+stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(10, 10)) 
 stim.preload()
 trial_one.add_stimulus(stim)
+
 trial_two = expyriment.design.Trial()
-stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(-100, -100)) 
+stim = expyriment.stimuli.Rectangle((50, 50), (255, 255, 255), position=(100, 100)) 
 stim.preload()
 trial_two.add_stimulus(stim)
+
+
 block_two.add_trial(trial_one)
 block_two.add_trial(trial_two)
 exp.add_block(block_two)
@@ -142,7 +124,7 @@ expyriment.control.end()
 
 
 
-
+# Utiliser block de expyriment et add trials
 
 
 
