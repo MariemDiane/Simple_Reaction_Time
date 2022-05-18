@@ -54,7 +54,7 @@ block_LH.add_trial(trial_left, copies=10)
 exp.add_block(block_LH)
 
 
-exp.data_variable_names = ["Block", "Trial", "Key", "RT"]
+exp.data_variable_names = ["Block", "Trial", "RT"]
 
 
 expyriment.control.start() 
