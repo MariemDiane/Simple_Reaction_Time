@@ -25,4 +25,12 @@ README.md
 - The delay of apparition of the stimuli varies randomly between 1sc and 2sc.
 
 
+### Analysis of the results 
+
+- Concatonate congruent trials (Block RH+Trial right & Blocl LH+Trial left) and incongruent trials (Block RH+Trial left & Block LH+Trial right)
+- Plot bar plot of congruent and incongruent RTs
+- t-test to check for statistical differences between congruent and incongruent means
+
+
+
 
