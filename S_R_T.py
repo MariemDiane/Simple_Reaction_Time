@@ -74,6 +74,7 @@ for iblock in [0, 1]:
     block = blocks[iblock]
     block.shuffle_trials()
     is_right_hand = (block.name == "Block Right Hand")
+    is_left_hand = (block.name == "Block Left Hand")
 
 
     instructions[iblock].present()
