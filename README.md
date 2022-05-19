@@ -27,9 +27,11 @@ README.md
 
 ### Analysis of the results 
 
-- Concatonate congruent trials (Block RH+Trial right & Blocl LH+Trial left) and incongruent trials (Block RH+Trial left & Block LH+Trial right)
-- Plot bar plot of congruent and incongruent RTs
-- t-test to check for statistical differences between congruent and incongruent means
+- Concatonate congruent trials (Block RH+Trial right & Blocl LH+Trial left) and incongruent trials (Block RH+Trial left & Block LH+Trial right) OK
+- Mean of the different concatenations OK 
+
+- Planned: Plot bar plot of congruent and incongruent RTs
+- Planned: t-test to check for statistical differences between congruent and incongruent means
 
 
 
